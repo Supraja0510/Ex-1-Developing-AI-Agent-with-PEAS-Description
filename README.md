@@ -35,7 +35,7 @@ It’s a framework used to define the task environment for an AI agent clearly.
 5. Personal assistant (like Siri or Alexa)
 ```
 
-### VacuumCleanerAgent
+### Email spam filter
 ### Algorithm:
 Step 1: Start
 
