@@ -37,85 +37,97 @@ It’s a framework used to define the task environment for an AI agent clearly.
 
 ### VacuumCleanerAgent
 ### Algorithm:
-Step 1: Initialize:
+Step 1: Start
 
-Set agent’s location to A
+Step 2: Collect emails from the inbox (both spam and non-spam).
 
-Set environment dirt status for locations A and B (True = dirty, False = clean)
+Step 3: Preprocess the emails
 
-Step 2 :Repeat until all locations are clean (no dirt):
-a. Sense if current location has dirt
-b. If current location has dirt:
-- Suck dirt (set dirt status at current location to False)
-c. Else:
-- If current location is A, move right to location B
-- Else if current location is B, move left to location A
-d. Print the agent’s current location and dirt status (optional for debugging)
+Remove punctuation, stop words, and special characters.
 
-Step 3: Stop when all locations are clean
+Convert text to lowercase.
 
-Step 4: Print total steps taken (optional)
+Tokenize the words.
+
+Step 4: Extract features
+
+Identify keywords (e.g., “free”, “offer”, “win”, “money”).
+
+Count frequency of words.
+
+Represent data using a feature vector (e.g., bag-of-words or TF-IDF).
+
+Step 5: Train the model
+
+Use a supervised learning algorithm (e.g., Naïve Bayes or SVM).
+
+Input: Labeled dataset (spam / not spam).
+
+Output: Trained spam filter model.
+
+Step 6: Test the model
+
+Provide new/unseen emails to the model.
+
+Predict whether each email is spam or not.
+
+Step 7: Evaluate performance
+
+Measure accuracy, precision, and recall.
+
+Improve model if needed.
+
+Step 8: Classify incoming emails
+
+For each new email → extract features → apply model → label as “spam” or “not spam.”
+
+Step 9: Move spam emails to the spam folder automatically.
+
+Step 10: Stop
 
 ### Program:
 ```
-class VacuumCleanerAgent:
-    def __init__(self):
-        # Initialize the agent's state (location and dirt status)
-        self.location = "A"  # Initial location (can be "A" or "B")
-        self.dirt_status = {"A": False, "B": False}  # Initial dirt status (False means no dirt)
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score
 
-    def move_left(self):
-        # Move the agent to the left if possible
-        if self.location == "B":
-            self.location = "A"
+emails = [
+    "Congratulations! You have won a free lottery ticket",
+    "Win a brand new car by clicking this link",
+    "Get free coupons now",
+    "Let's meet for lunch tomorrow",
+    "Your project report has been approved",
+    "Are you coming to the meeting today?",
+    "You have been selected for a free vacation"
+]
 
-    def move_right(self):
-        # Move the agent to the right if possible
-        if self.location == "A":
-            self.location = "B"
+labels = [1, 1, 1, 0, 0, 0, 1]   # 1 = spam, 0 = not spam
 
-    def suck_dirt(self):
-        # Suck dirt in the current location if there is dirt
-        if self.dirt_status[self.location]:
-            self.dirt_status[self.location] = False
-            print(f"Sucked dirt in location {self.location}")
+vectorizer = CountVectorizer()
+features = vectorizer.fit_transform(emails)
 
-    def do_nothing(self):
-        # Do nothing
-        pass
+X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
 
-    def perform_action(self, action):
-        # Perform the specified action
-        if action == "left":
-            self.move_left()
-        elif action == "right":
-            self.move_right()
-        elif action == "suck":
-            self.suck_dirt()
-        elif action == "nothing":
-            self.do_nothing()
-        else:
-            print("Invalid action")
+model = MultinomialNB()
+model.fit(X_train, y_train)
 
-    def print_status(self):
-        # Print the current status of the agent
-        print(f"Location: {self.location}, Dirt Status: {self.dirt_status}")
+y_pred = model.predict(X_test)
 
-# Example usage:
-agent = VacuumCleanerAgent()
+print("Accuracy:", accuracy_score(y_test, y_pred))
 
+test_email = ["Free offer! Click here to win prizes"]
+test_features = vectorizer.transform(test_email)
+prediction = model.predict(test_features)
 
-# Move the agent, suck dirt, and do nothing
+if prediction[0] == 1:
+    print("Result: Spam Email")
+else:
+    print("Result: Not Spam Email")
 
-agent.perform_action("left")
-agent.print_status()
-agent.perform_action("suck")
-agent.print_status()
-agent.perform_action("nothing")
-agent.print_status()
 ```
 ### Sample Output:
 
-425810495-d1198ba7-da19-413b-9907-4844afae627f
+<img width="381" height="69" alt="image" src="https://github.com/user-attachments/assets/13b74b00-c418-44de-8d16-71944804c451" />
 
 ### Result:
